@@ -53,7 +53,7 @@ fun HomeScreen() {
                 name = "Sumbar Destination"
             )
             Text(
-                text = "Top Kabupaten - Kota",
+                text = "Top 5 Trip",
                 overflow = TextOverflow.Ellipsis,
                 fontFamily = Fonts.fontFamily,
                 fontWeight = FontWeight.SemiBold,
