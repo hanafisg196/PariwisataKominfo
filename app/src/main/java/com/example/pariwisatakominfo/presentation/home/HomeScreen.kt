@@ -50,7 +50,7 @@ fun HomeScreen() {
         Spacer(modifier = Modifier.height(35.dp))
         Column {
             TopBar(
-                name = "Sumbar Destination"
+                name = "Sumbar Traveling"
             )
             Text(
                 text = "Top 5 Trip",
@@ -59,7 +59,7 @@ fun HomeScreen() {
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp,
                 modifier = Modifier
-                    .padding(start = 19.dp)
+                    .padding(start = 20.dp, top = 20.dp)
             )
             City()
 

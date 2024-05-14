@@ -108,7 +108,7 @@ fun DestinationDetail() {
 
 
 }
-@Preview(showSystemUi = true)
+
 @Composable
 fun ParagraphSection()
 {
@@ -149,7 +149,7 @@ fun DestinationDetailPreview()
 
 }
 
-@Preview(showSystemUi = true)
+
 @Composable
 fun DetailLocation()
 {

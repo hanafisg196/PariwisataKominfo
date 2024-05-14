@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.pariwisatakominfo.presentation.details.DestinationDetailScreen
+import com.example.pariwisatakominfo.presentation.details.TripDetailScreen
 import com.example.pariwisatakominfo.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +19,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
 //                HomeScreen()
-                DestinationDetailScreen()
+//                DestinationDetailScreen()
+                TripDetailScreen()
             }
         }
     }
