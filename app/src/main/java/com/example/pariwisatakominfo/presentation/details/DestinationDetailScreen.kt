@@ -21,13 +21,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.pariwisatakominfo.R
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 
 
-@Preview(showSystemUi = true)
+
 @Composable
-fun DestinationDetailScreen()
+fun DestinationDetailScreen(navController: NavController)
 {
     LazyColumn(
         modifier = Modifier
@@ -35,7 +36,7 @@ fun DestinationDetailScreen()
             .background(color = colorResource(id = R.color.white))
     ) {
         item {
-            DestinationDetail()
+            DestinationDetail(navController)
         }
         item {
             Spacer(modifier = Modifier.height(10.dp))

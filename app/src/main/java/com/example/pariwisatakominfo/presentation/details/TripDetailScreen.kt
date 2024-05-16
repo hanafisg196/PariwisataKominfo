@@ -12,16 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.pariwisatakominfo.R
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 
 
-@Preview(showSystemUi = true)
 @Composable
-fun TripDetailScreen()
+fun TripDetailScreen(navController: NavController)
 {
     LazyColumn(
         modifier = Modifier
@@ -30,14 +29,16 @@ fun TripDetailScreen()
     ){
         item{
             Spacer(modifier = Modifier.height(35.dp))
-            TopBarTrip()
+            TopBarTrip(navController)
         }
         item{
+            Spacer(modifier = Modifier.height(15.dp))
             TripSection()
         }
         item{
+
             Text(
-                text = "Top Flows",
+                text = "Trip Flows",
                 overflow = TextOverflow.Ellipsis,
                 fontFamily = Fonts.fontFamily,
                 fontWeight = FontWeight.SemiBold,
@@ -45,7 +46,7 @@ fun TripDetailScreen()
                 modifier = Modifier
                     .padding(start = 20.dp)
             )
-            DestinationSection()
+            DestinationSection(navController)
         }
 
     }

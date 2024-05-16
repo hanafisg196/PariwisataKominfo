@@ -2,6 +2,7 @@ package com.example.pariwisatakominfo.presentation.details
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,20 +34,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.pariwisatakominfo.R
+import com.example.pariwisatakominfo.presentation.navgraph.Screen
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 
 
 
 @Composable
 fun TopBarTrip(
-    modifier: Modifier = Modifier
+
+    navController: NavController
 )
 {
     Row(
         verticalAlignment = Alignment.CenterVertically,
 
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 25.dp),
         content = {
@@ -57,6 +61,9 @@ fun TopBarTrip(
                         color = Color.White
                     )
                     .padding(10.dp)
+                    .clickable {
+                        navController.navigateUp()
+                    }
 
             ) {
                 Icon(
@@ -151,10 +158,10 @@ fun TripSection()
     }
 }
 
-@Preview(showSystemUi = true)
+
 
 @Composable
-fun DestinationSection()
+fun DestinationSection(navController: NavController)
 {
     Card(
         colors = CardDefaults.cardColors(
@@ -163,7 +170,10 @@ fun DestinationSection()
         modifier = Modifier
             .padding(20.dp)
             .fillMaxWidth()
-            .height(120.dp),
+            .height(120.dp)
+            .clickable {
+                navController.navigate(Screen.DestinationDetail.route)
+            },
         shape = RoundedCornerShape(8.dp),
 
         )

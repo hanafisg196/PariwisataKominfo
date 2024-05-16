@@ -2,6 +2,7 @@ package com.example.pariwisatakominfo.presentation.details
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,9 +26,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.size.Scale
@@ -35,9 +36,8 @@ import com.example.pariwisatakominfo.R
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 
 
-@Preview(showSystemUi = true)
 @Composable
-fun DestinationDetail() {
+fun DestinationDetail(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -69,6 +69,9 @@ fun DestinationDetail() {
                     .size(50.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .background(Color.White)
+                    .clickable {
+                        navController.navigateUp()
+                    }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.left),
