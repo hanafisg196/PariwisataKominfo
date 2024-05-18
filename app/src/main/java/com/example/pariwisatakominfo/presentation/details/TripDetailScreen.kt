@@ -1,5 +1,6 @@
 package com.example.pariwisatakominfo.presentation.details
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,20 +9,36 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.example.pariwisatakominfo.R
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 
 
 @Composable
-fun TripDetailScreen(navController: NavController)
+fun TripDetailScreen(
+    navController: NavController,
+    viewModel: TripDetailViewModel = hiltViewModel(),
+    viewModelTrip: TripViewModel = hiltViewModel()
+
+)
 {
+
+    val destinations = viewModel.tripDetailPage.collectAsLazyPagingItems()
+    val  trip = viewModelTrip.trip.collectAsState()
+
+
+
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -33,7 +50,9 @@ fun TripDetailScreen(navController: NavController)
         }
         item{
             Spacer(modifier = Modifier.height(15.dp))
-            TripSection()
+            trip.value?.let { trip ->
+                TripSection(trip = trip)
+            }
         }
         item{
 
@@ -46,8 +65,14 @@ fun TripDetailScreen(navController: NavController)
                 modifier = Modifier
                     .padding(start = 20.dp)
             )
-            DestinationSection(navController)
+
+        }
+        items(destinations){ item ->
+            item?.let {
+                DestinationSection(navController,it)
+            }
         }
 
     }
+
 }

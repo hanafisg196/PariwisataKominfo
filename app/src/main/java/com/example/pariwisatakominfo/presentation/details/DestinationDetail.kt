@@ -3,13 +3,18 @@ package com.example.pariwisatakominfo.presentation.details
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,26 +31,97 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Scale
 import com.example.pariwisatakominfo.R
+import com.example.pariwisatakominfo.common.Constant.ITEM_URL
+import com.example.pariwisatakominfo.model.Destination
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 
 
 @Composable
-fun DestinationDetail(navController: NavController) {
+fun DestinationDetail(
+    destination: Destination,
+    navController: NavController
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
+        item {
+
+            DestinationHeader(
+                title = destination.title,
+                daerah = destination.daerah,
+                cover = ITEM_URL+destination.cover,
+                navController = navController
+            )
+        }
+        item {
+            Spacer(modifier = Modifier.height(10.dp))
+            ParagraphSection(
+                article = destination.article
+            )
+        }
+        item {
+            Text(
+                text = "Preview",
+                overflow = TextOverflow.Ellipsis,
+                fontFamily = Fonts.fontFamily,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(start = 15.dp, bottom = 10.dp)
+            )
+        }
+        item {
+
+                    DestinationDetailPreview(destination)
+
+        }
+        item {
+            Text(
+                text = destination.location,
+                overflow = TextOverflow.Ellipsis,
+                fontFamily = Fonts.fontFamily,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp,
+                modifier = Modifier.padding(start = 15.dp, bottom =15.dp)
+            )
+        }
+        item {
+            DetailLocation(location = destination.location)
+        }
+    }
+}
+
+
+
+
+@Composable
+fun DestinationHeader(
+    navController: NavController,
+    cover: String,
+    title: String,
+    daerah: String
+)
+
+    {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(280.dp),
+            .height(300.dp),
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.panorama),
+            painter = rememberAsyncImagePainter(cover),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()
@@ -66,7 +142,7 @@ fun DestinationDetail(navController: NavController) {
         ) {
             Box(
                 modifier = Modifier
-                    .size(50.dp)
+                    .size(40.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .background(Color.White)
                     .clickable {
@@ -78,7 +154,7 @@ fun DestinationDetail(navController: NavController) {
                     contentDescription = null,
                     tint = Color.Black,
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(30.dp)
                         .align(Alignment.Center)
                 )
 
@@ -87,7 +163,7 @@ fun DestinationDetail(navController: NavController) {
         }
 
         Text(
-            text = "Wisata Mandeh",
+            text = title,
             fontFamily = Fonts.fontFamily,
             fontWeight = FontWeight.SemiBold,
             fontSize = 30.sp,
@@ -97,7 +173,7 @@ fun DestinationDetail(navController: NavController) {
                 .padding(start = 25.dp, bottom = 60.dp)
         )
         Text(
-            text = "Kabupaten Pesisir Selatan",
+            text = daerah,
             fontFamily = Fonts.fontFamily,
             fontWeight = FontWeight.Light,
             fontSize = 16.sp,
@@ -113,48 +189,76 @@ fun DestinationDetail(navController: NavController) {
 }
 
 @Composable
-fun ParagraphSection()
-{
+fun ParagraphSection(
+    article:String
+) {
     Text(
-        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        text =  article,
         fontFamily = Fonts.fontFamily,
         fontWeight = FontWeight.Light,
         fontSize = 16.sp,
         color = Color.Gray,
+        lineHeight = 24.sp,
+        textAlign = TextAlign.Justify,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, bottom = 20.dp)
+            .padding(start = 20.dp, bottom = 20.dp, end = 20.dp)
     )
 }
 
 
+
+
 @Composable
-fun DestinationDetailPreview()
+fun DestinationDetailPreview(
+    destination: Destination
+) {
+    val imageUrl = destination.images
+    LazyRow {
+        items(imageUrl) { imageUrl ->
+           Images(image = ITEM_URL+imageUrl.image)
+        }
+    }
+}
+
+@Composable
+fun Images(
+    image:String
+)
 {
 
-    Box(modifier = Modifier)
-    {
-        val context = LocalContext.current
-        AsyncImage(
-            model = ImageRequest.Builder(context)
-                .data("https://images3.alphacoders.com/133/thumbbig-1337500.webp")
-                .crossfade(true)
-                .scale(Scale.FILL)
-                .build(),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
-        )
-
-
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 5.dp, end = 5.dp)
+        ) {
+            Box(
+                modifier = Modifier
+//                    .padding(horizontal = 5.dp)
+                    .height(120.dp)
+                    .clip(RoundedCornerShape(8.dp))
+            ) {
+                val context = LocalContext.current
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .data(image)
+                        .crossfade(true)
+                        .scale(Scale.FILL)
+                        .build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
     }
 
 
-}
+
 
 
 @Composable
-fun DetailLocation()
+fun DetailLocation(location: String)
 {
     Card(
         elevation = CardDefaults.cardElevation(
@@ -164,9 +268,9 @@ fun DetailLocation()
             containerColor = Color.White,
         ),
         modifier = Modifier
-            .padding(start = 15.dp, top = 2.dp, end = 15.dp, bottom = 5.dp)
+            .padding(start = 15.dp, top = 2.dp, end = 15.dp, bottom = 15.dp)
             .fillMaxWidth()
-            .height(120.dp),
+            .height(80.dp),
         shape = RoundedCornerShape(8.dp),
 
         ) {
@@ -183,7 +287,7 @@ fun DetailLocation()
                     .size(40.dp)
             )
             Text(
-                text = "Jln. Padang Painan Pesisir Selatan",
+                text = location,
                 fontFamily = Fonts.fontFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = 20.sp,

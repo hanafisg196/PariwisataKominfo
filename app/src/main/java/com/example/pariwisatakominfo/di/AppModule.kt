@@ -2,6 +2,10 @@ package com.example.pariwisatakominfo.di
 
 import com.example.pariwisatakominfo.common.Constant.BASE_URL
 import com.example.pariwisatakominfo.data.ApiService
+import com.example.pariwisatakominfo.repository.DestinationsRepo
+import com.example.pariwisatakominfo.repository.TripDetailRepo
+import com.example.pariwisatakominfo.repository.impl.DestinationsRepoImpl
+import com.example.pariwisatakominfo.repository.impl.TripDetailRepoImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,4 +34,12 @@ object AppModule {
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
     }
+
+    @Provides
+    fun provideDestinationsRepo(api: ApiService): DestinationsRepo = DestinationsRepoImpl(api)
+    @Provides
+    fun provideTripDetailRepo(api: ApiService): TripDetailRepo = TripDetailRepoImpl(api)
+
+
+
 }

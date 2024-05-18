@@ -1,6 +1,6 @@
 package com.example.pariwisatakominfo.presentation.home
 
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -38,76 +39,74 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.pariwisatakominfo.R
 import com.example.pariwisatakominfo.common.Constant.ITEM_URL
-import com.example.pariwisatakominfo.model.BottomMenus
+import com.example.pariwisatakominfo.model.Destination
 import com.example.pariwisatakominfo.model.Trip
 import com.example.pariwisatakominfo.presentation.navgraph.Screen
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 
 
 @Composable
-fun HomeScreen(navController: NavHostController) {
-    Column (
+fun HomeScreen(
+    viewModel: DestinationsViewModel = hiltViewModel(),
+    navController: NavHostController
+) {
+    val destinations = viewModel.destinationsPage.collectAsLazyPagingItems()
+    Box (
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                color = colorResource(id = R.color.white)
-            )
+            .background(color = colorResource(id = R.color.white))
     ){
-        Spacer(modifier = Modifier.height(35.dp))
-        Column {
-            TopBar(
-                name = "Sumbar Traveling"
-            )
-            Text(
-                text = "Top 5 Trip",
-                overflow = TextOverflow.Ellipsis,
-                fontFamily = Fonts.fontFamily,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp,
-                modifier = Modifier
-                    .padding(start = 20.dp, top = 20.dp)
-            )
-           Trips(navController = navController)
-            Text(
-                text = "Top Destination",
-                overflow = TextOverflow.Ellipsis,
-                fontFamily = Fonts.fontFamily,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp,
-                modifier = Modifier
-                    .padding(start = 19.dp)
-            )
-            Destination(navController = navController)
-            Spacer(modifier = Modifier.height(100.dp))
-            val items = listOf(
-                BottomMenus(R.drawable.category),
-                BottomMenus(R.drawable.destiantion),
-                BottomMenus(R.drawable.star)
-            )
-            ButtonMenu(items = items) { clickedItem ->
-                when(clickedItem.iconId){
-                    R.drawable.category -> {
-
-                    }
-                    R.drawable.destiantion -> {
-
-                    }
-                    R.drawable.heart -> {
-
-                    }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(35.dp))
+            }
+            item {
+                TopBar(name = "Sumbar Traveling")
+            }
+            item {
+                Text(
+                    text = "Top 5 Trip",
+                    overflow = TextOverflow.Ellipsis,
+                    fontFamily = Fonts.fontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(start = 20.dp, top = 20.dp)
+                )
+            }
+            item {
+                Trips(navController = navController)
+            }
+            item {
+                Text(
+                    text = "Popular Destination",
+                    overflow = TextOverflow.Ellipsis,
+                    fontFamily = Fonts.fontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(start = 19.dp)
+                )
+            }
+            items(destinations) { item ->
+                item?.let {
+                    Destination(destination = it, navController = navController)
                 }
             }
 
         }
-
-
     }
 
 }
+
 
 
 @Composable
@@ -174,7 +173,7 @@ fun TopBar(
 @Composable
 fun Trip(
     trip:Trip,
-    navController: NavController
+    onclickItem: (Trip) -> Unit
 ) {
     Card(
         colors = CardDefaults.cardColors(
@@ -185,7 +184,7 @@ fun Trip(
             .width(220.dp)
             .height(250.dp)
             .clickable {
-                navController.navigate(Screen.TripDetailScreen.route)
+               onclickItem(trip)
             },
         shape = RoundedCornerShape(8.dp),
 
@@ -228,7 +227,7 @@ fun Trip(
         ) {
             Icon(
                 tint = colorResource(id = R.color.blue),
-                painter = painterResource(id = R.drawable.destiantion),
+                painter = painterResource(id = R.drawable.destination),
                 contentDescription = null,
                 modifier =
                 Modifier
@@ -259,15 +258,19 @@ fun Trips(
     LazyRow {
         items(state.size) { index ->
             val tripSlide = state[index]
-            Trip(trip = tripSlide , navController = navController)
-
+            Trip(trip = tripSlide){
+                navController.navigate(Screen.TripDetailScreen.route + "/${tripSlide.id}")
+                Log.d("Trip to destinaton","Item id: ${tripSlide.id}")
+            }
         }
     }
 }
 
 @Composable
 fun Destination(
-    navController: NavController
+    destination: Destination,
+    navController: NavController,
+
 )
 {
     Card(
@@ -279,7 +282,7 @@ fun Destination(
             .fillMaxWidth()
             .height(150.dp)
             .clickable {
-                navController.navigate(Screen.DestinationDetail.route)
+                navController.navigate(Screen.DestinationDetail.route + "/${destination.id}")
             },
 
         shape = RoundedCornerShape(8.dp),
@@ -296,18 +299,23 @@ fun Destination(
                     .height(150.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.panorama),
+                val context = LocalContext.current
+                val imageUrl = destination.cover
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .data(ITEM_URL + imageUrl)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
                     modifier = Modifier
+                        .clip(RoundedCornerShape(10.dp))
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.FillBounds
                 )
             }
             Column {
                 Text(
-                    text = "Wisata Mandeh..",
+                    text = destination.title,
                     fontFamily = Fonts.fontFamily,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
@@ -324,7 +332,7 @@ fun Destination(
                         tint = colorResource(id = R.color.blue)
                     )
                     Text(
-                        text = "Jl. Wisata Satu...",
+                        text = destination.daerah,
                         fontFamily = Fonts.fontFamily,
                         fontWeight = FontWeight.Normal,
                         fontSize = 13.sp,
@@ -362,36 +370,4 @@ fun Destination(
     }
 }
 
-
-@Composable
-fun ButtonMenuItem(
-    item: BottomMenus,
-    onItemClick: (BottomMenus) -> Unit
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier =
-        Modifier.clickable {
-            onItemClick(item)
-        }
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .clip(RoundedCornerShape(10.dp))
-                .padding(10.dp)
-        )
-        {
-            Icon(
-                painter = painterResource(id = item.iconId),
-                contentDescription = null,
-                modifier =
-                Modifier.size(30.dp),
-                Color.White
-
-            )
-        }
-    }
-}
 

@@ -1,6 +1,5 @@
 package com.example.pariwisatakominfo.presentation.details
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,19 +25,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.pariwisatakominfo.R
+import com.example.pariwisatakominfo.common.Constant
+import com.example.pariwisatakominfo.model.Destination
+import com.example.pariwisatakominfo.model.Trip
 import com.example.pariwisatakominfo.presentation.navgraph.Screen
 import com.example.pariwisatakominfo.ui.fonts.Fonts
-
 
 
 @Composable
@@ -87,9 +90,12 @@ fun TopBarTrip(
     )
 }
 
-@Preview(showSystemUi = true)
+
 @Composable
-fun TripSection()
+fun TripSection(
+    trip: Trip,
+
+)
 {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -114,18 +120,24 @@ fun TripSection()
                     .height(200.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.panorama),
+
+                val context = LocalContext.current
+                val imageUrl = trip.cover
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .data(Constant.ITEM_URL + imageUrl)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
                     modifier = Modifier
+                        .clip(RoundedCornerShape(10.dp))
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.FillBounds
                 )
 
             }
             Text(
-                text = "Padang",
+                text = trip.name,
                 fontFamily = Fonts.fontFamily,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp,
@@ -138,7 +150,7 @@ fun TripSection()
             ) {
                 Icon(
                     tint = colorResource(id = R.color.blue),
-                    painter = painterResource(id = R.drawable.destiantion),
+                    painter = painterResource(id = R.drawable.destination),
                     contentDescription = null,
                     modifier =
                     Modifier
@@ -161,18 +173,20 @@ fun TripSection()
 
 
 @Composable
-fun DestinationSection(navController: NavController)
+fun DestinationSection(
+    navController: NavController,
+    destination: Destination)
 {
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
         ),
         modifier = Modifier
-            .padding(20.dp)
+            .padding(start = 20.dp , end = 20.dp, bottom = 10.dp)
             .fillMaxWidth()
             .height(120.dp)
             .clickable {
-                navController.navigate(Screen.DestinationDetail.route)
+                navController.navigate(Screen.DestinationDetail.route + "/${destination.id}")
             },
         shape = RoundedCornerShape(8.dp),
 
@@ -188,18 +202,23 @@ fun DestinationSection(navController: NavController)
                     .fillMaxHeight(),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.panorama),
+                val context = LocalContext.current
+                val imageUrl = destination.cover
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .data(Constant.ITEM_URL + imageUrl)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
                     modifier = Modifier
+                        .clip(RoundedCornerShape(10.dp))
                         .fillMaxSize()
-                        .clip(RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.FillBounds
                 )
             }
             Column {
                 Text(
-                    text = "Wisata Mandeh..",
+                    text = destination.title,
                     fontFamily = Fonts.fontFamily,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 16.sp,
@@ -216,7 +235,7 @@ fun DestinationSection(navController: NavController)
                         tint = colorResource(id = R.color.blue)
                     )
                     Text(
-                        text = "Jl. Wisata Satu...",
+                        text = destination.daerah,
                         fontFamily = Fonts.fontFamily,
                         fontWeight = FontWeight.Normal,
                         fontSize = 13.sp,
@@ -248,9 +267,6 @@ fun DestinationSection(navController: NavController)
 
 
         }
-
-
-
     }
 }
 
