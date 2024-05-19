@@ -44,7 +44,17 @@ suspend fun searchDestination(
     @Query("perPage") perPage: Int
 
     ) : SearchDestinationResponse
+
+@GET("trips")
+    suspend fun getTrips(
+    @Query("page") page: Int,
+    @Query("perPage") perPage: Int
+    ) : TripsResponse
+
 }
+
+
+
 
 
 

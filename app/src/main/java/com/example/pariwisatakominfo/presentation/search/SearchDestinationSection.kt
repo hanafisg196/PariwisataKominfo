@@ -2,6 +2,7 @@ package com.example.pariwisatakominfo.presentation.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,7 +39,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,42 +58,42 @@ fun TopBar(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 25.dp),
-        content = {
-            Box(
+            .padding(start = 25.dp, top = 10.dp)
+
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(Color.White)
+                .clickable {
+                    navController.navigateUp()
+                }
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.left),
+                contentDescription = null,
+                tint = Color.Black,
                 modifier = Modifier
-                    .background(
-                        shape = RoundedCornerShape(10.dp),
-                        color = Color.White
-                    )
-                    .padding(10.dp)
-                    .clickable {
-                        navController.navigateUp()
-                    }
-
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.left),
-                    contentDescription = "Back",
-                    tint = Color.Black,
-                    modifier = Modifier.size(25.dp)
-                )
-
-            }
-            Text(
-                text = "Search Destination",
-                overflow = TextOverflow.Ellipsis,
-                fontFamily = Fonts.fontFamily,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(start = 40.dp),
-                textAlign = TextAlign.Center
+                    .size(30.dp)
+                    .align(Alignment.Center)
             )
+
+
         }
-    )
+        Text(
+            text = "Search Destination",
+            overflow = TextOverflow.Ellipsis,
+            fontFamily = Fonts.fontFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(start = 20.dp, top = 5.dp)
+            )
+
+
+    }
 }
 
 
@@ -240,10 +240,4 @@ fun SearchResult(
 
         }
     }
-}
-
-@Composable
-fun SearchItem()
-{
-
 }

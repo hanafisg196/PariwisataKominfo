@@ -5,9 +5,11 @@ import com.example.pariwisatakominfo.data.ApiService
 import com.example.pariwisatakominfo.repository.DestinationsRepo
 import com.example.pariwisatakominfo.repository.SearchDestinationRepo
 import com.example.pariwisatakominfo.repository.TripDetailRepo
+import com.example.pariwisatakominfo.repository.TripsRepo
 import com.example.pariwisatakominfo.repository.impl.DestinationsRepoImpl
 import com.example.pariwisatakominfo.repository.impl.SearchDestinationRepoImpl
 import com.example.pariwisatakominfo.repository.impl.TripDetailRepoImpl
+import com.example.pariwisatakominfo.repository.impl.TripsRepoImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,6 +45,8 @@ object AppModule {
     fun provideTripDetailRepo(api: ApiService): TripDetailRepo = TripDetailRepoImpl(api)
     @Provides
     fun provideSearchDestinationRepo(api: ApiService): SearchDestinationRepo = SearchDestinationRepoImpl(api)
+    @Provides
+    fun provideTripsRepo(api: ApiService): TripsRepo = TripsRepoImpl(api)
 
 
 

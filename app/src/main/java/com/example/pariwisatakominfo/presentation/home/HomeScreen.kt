@@ -1,5 +1,6 @@
 package com.example.pariwisatakominfo.presentation.home
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -77,7 +78,7 @@ fun HomeScreen(
             }
 
             item {
-                TopBar(name = "Sumbar Traveling", navController = navController)
+                TopBar(name = " Sumbar Traveling", navController = navController)
             }
             item {
                 Text(
@@ -214,11 +215,14 @@ fun TopBar(
 
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun Trip(
     trip:Trip,
     onclickItem: (Trip) -> Unit
 ) {
+  val total = trip.destinations_count
+
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color.White,
@@ -278,7 +282,7 @@ fun Trip(
                     .size(20.dp)
             )
             Text(
-                text = "10 Destinasi Wisata",
+                text = "$total Destinasi Wisata",
                 fontFamily = Fonts.fontFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = 13.sp,

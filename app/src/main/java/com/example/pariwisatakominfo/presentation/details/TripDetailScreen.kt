@@ -56,7 +56,6 @@ fun TripDetailScreen(
             }
         }
         item{
-
             Text(
                 text = "Trip Flows",
                 overflow = TextOverflow.Ellipsis,
@@ -85,7 +84,7 @@ fun TripDetailScreen(
             }
             is LoadState.Error -> {
                 Log.d("TripDetailScreen", "Error State")
-                // Handle the error state appropriately
+
             }
         }
 

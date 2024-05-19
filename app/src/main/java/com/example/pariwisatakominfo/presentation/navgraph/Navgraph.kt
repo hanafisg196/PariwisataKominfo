@@ -12,7 +12,10 @@ import com.example.pariwisatakominfo.presentation.details.DestinationViewModel
 import com.example.pariwisatakominfo.presentation.details.TripDetailScreen
 import com.example.pariwisatakominfo.presentation.details.TripDetailViewModel
 import com.example.pariwisatakominfo.presentation.details.TripViewModel
+import com.example.pariwisatakominfo.presentation.home.Destination
 import com.example.pariwisatakominfo.presentation.home.HomeScreen
+import com.example.pariwisatakominfo.presentation.list.DestinationsScreen
+import com.example.pariwisatakominfo.presentation.list.TripsScreen
 import com.example.pariwisatakominfo.presentation.search.SearchScreen
 
 @Composable
@@ -66,6 +69,20 @@ fun SetNavGraph(
         ){
             SearchScreen(navController = navController)
         }
+
+        composable(
+            route = Screen.DestinationsScreen.route
+        ){
+            DestinationsScreen(navController = navController)
+        }
+
+        composable(
+            route = Screen.Trips.route
+        ){
+            TripsScreen(navController = navController)
+        }
+
+
 
 
     }

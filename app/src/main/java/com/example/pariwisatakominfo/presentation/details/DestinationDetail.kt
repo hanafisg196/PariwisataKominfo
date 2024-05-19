@@ -12,19 +12,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,7 +48,10 @@ import coil.size.Scale
 import com.example.pariwisatakominfo.R
 import com.example.pariwisatakominfo.common.Constant.ITEM_URL
 import com.example.pariwisatakominfo.model.Destination
+import com.example.pariwisatakominfo.presentation.loading.LoadDetail
+import com.example.pariwisatakominfo.presentation.loading.LoadRefreshItem
 import com.example.pariwisatakominfo.ui.fonts.Fonts
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -59,55 +59,67 @@ fun DestinationDetail(
     destination: Destination,
     navController: NavController
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
-    ) {
-        item {
 
-            DestinationHeader(
-                title = destination.title,
-                daerah = destination.daerah,
-                cover = ITEM_URL+destination.cover,
-                navController = navController
-            )
-        }
-        item {
-            Spacer(modifier = Modifier.height(10.dp))
-            ParagraphSection(
-                article = destination.article
-            )
-        }
-        item {
-            Text(
-                text = "Preview",
-                overflow = TextOverflow.Ellipsis,
-                fontFamily = Fonts.fontFamily,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(start = 15.dp, bottom = 10.dp)
-            )
-        }
-        item {
-         DestinationDetailPreview(destination)
-        }
-        item {
-            Text(
-                text = destination.location,
-                overflow = TextOverflow.Ellipsis,
-                fontFamily = Fonts.fontFamily,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(start = 15.dp, bottom =15.dp)
-            )
-        }
-        item {
-            DetailLocation(location = destination.location)
-        }
+    var isLoading by remember { mutableStateOf(true) }
 
+    LaunchedEffect(Unit) {
+
+        delay(1000)
+        isLoading = false
+    }
+    if (isLoading) {
+        LoadDetail()
+    } else {
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.Start
+        ) {
+            item {
+                DestinationHeader(
+                    title = destination.title,
+                    daerah = destination.daerah,
+                    cover = ITEM_URL + destination.cover,
+                    navController = navController
+                )
+            }
+            item {
+                Spacer(modifier = Modifier.height(10.dp))
+                ParagraphSection(
+                    article = destination.article
+                )
+            }
+            item {
+                Text(
+                    text = "Preview",
+                    overflow = TextOverflow.Ellipsis,
+                    fontFamily = Fonts.fontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(start = 15.dp, bottom = 10.dp)
+                )
+            }
+            item {
+                DestinationDetailPreview(destination)
+            }
+            item {
+                Text(
+                    text = destination.location,
+                    overflow = TextOverflow.Ellipsis,
+                    fontFamily = Fonts.fontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(start = 15.dp, bottom = 15.dp)
+                )
+            }
+            item {
+                DetailLocation(location = destination.location)
+            }
+        }
     }
 }
+
 
 
 
@@ -305,24 +317,7 @@ fun DetailLocation(location: String)
 
     }
 }
-@Composable
-fun IndeterminateCircularIndicator() {
-    var loading by remember { mutableStateOf(false) }
 
-    Button(onClick = { loading = true }, enabled = !loading) {
-        Text("Start loading")
-    }
-
-    if (!loading) return
-
-    CircularProgressIndicator(
-        modifier = Modifier.
-
-        width(64.dp),
-        color = MaterialTheme.colorScheme.secondary,
-        trackColor = MaterialTheme.colorScheme.surfaceVariant,
-    )
-}
 
 
 
