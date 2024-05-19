@@ -7,4 +7,6 @@ sealed class Screen (val route : String){
 
     object DestinationDetail : Screen(route = "destination/{id}")
 
+    object SearchScreen : Screen(route = "search")
+
 }

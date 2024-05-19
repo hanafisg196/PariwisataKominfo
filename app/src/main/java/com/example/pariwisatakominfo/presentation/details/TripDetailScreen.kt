@@ -18,9 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.example.pariwisatakominfo.R
+import com.example.pariwisatakominfo.presentation.loading.LoadRefreshItem
+import com.example.pariwisatakominfo.presentation.loading.LoadingItem
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 
 
@@ -35,8 +38,6 @@ fun TripDetailScreen(
 
     val destinations = viewModel.tripDetailPage.collectAsLazyPagingItems()
     val  trip = viewModelTrip.trip.collectAsState()
-
-
 
 
     LazyColumn(
@@ -70,6 +71,35 @@ fun TripDetailScreen(
         items(destinations){ item ->
             item?.let {
                 DestinationSection(navController,it)
+            }
+        }
+        when (destinations.loadState.append) {
+            is LoadState.NotLoading -> {
+                Log.d("TripDetailScreen", "NotLoading State")
+            }
+            LoadState.Loading -> {
+                Log.d("TripDetailScreen", "Loading State")
+                item {
+                    LoadingItem()
+                }
+            }
+            is LoadState.Error -> {
+                Log.d("TripDetailScreen", "Error State")
+                // Handle the error state appropriately
+            }
+        }
+
+        when (destinations.loadState.refresh) {
+            is LoadState.NotLoading -> Unit
+            LoadState.Loading -> {
+
+                item {
+                    LoadRefreshItem()
+                }
+            }
+            is LoadState.Error -> {
+                Log.d("TripDetailScreen", "Error State")
+                // Handle the error state appropriately
             }
         }
 

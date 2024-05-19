@@ -13,6 +13,7 @@ import com.example.pariwisatakominfo.presentation.details.TripDetailScreen
 import com.example.pariwisatakominfo.presentation.details.TripDetailViewModel
 import com.example.pariwisatakominfo.presentation.details.TripViewModel
 import com.example.pariwisatakominfo.presentation.home.HomeScreen
+import com.example.pariwisatakominfo.presentation.search.SearchScreen
 
 @Composable
 fun SetNavGraph(
@@ -59,6 +60,11 @@ fun SetNavGraph(
             }
 
             TripDetailScreen(navController = navController)
+        }
+        composable(
+            route = Screen.SearchScreen.route
+        ){
+            SearchScreen(navController = navController)
         }
 
 

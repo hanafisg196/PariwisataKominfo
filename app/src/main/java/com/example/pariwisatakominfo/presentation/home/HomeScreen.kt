@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
@@ -47,6 +48,8 @@ import com.example.pariwisatakominfo.R
 import com.example.pariwisatakominfo.common.Constant.ITEM_URL
 import com.example.pariwisatakominfo.model.Destination
 import com.example.pariwisatakominfo.model.Trip
+import com.example.pariwisatakominfo.presentation.loading.LoadRefreshItem
+import com.example.pariwisatakominfo.presentation.loading.LoadingItem
 import com.example.pariwisatakominfo.presentation.navgraph.Screen
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 
@@ -67,11 +70,14 @@ fun HomeScreen(
                 .fillMaxSize()
                 
         ) {
+
             item {
                 Spacer(modifier = Modifier.height(35.dp))
+
             }
+
             item {
-                TopBar(name = "Sumbar Traveling")
+                TopBar(name = "Sumbar Traveling", navController = navController)
             }
             item {
                 Text(
@@ -85,6 +91,7 @@ fun HomeScreen(
             }
             item {
                 Trips(navController = navController)
+
             }
             item {
                 Text(
@@ -96,11 +103,44 @@ fun HomeScreen(
                     modifier = Modifier.padding(start = 19.dp)
                 )
             }
-            items(destinations) { item ->
+            items(destinations) {
+                item ->
                 item?.let {
                     Destination(destination = it, navController = navController)
                 }
+
             }
+            when (destinations.loadState.append) {
+                is LoadState.NotLoading -> Unit
+                LoadState.Loading -> {
+                    item {
+                        LoadingItem()
+                    }
+                }
+                is LoadState.Error -> {
+                    Log.e("HomeScreen", "Append: Error")
+                    item {
+                        Text("Failed to load more destinations.")
+                    }
+                }
+            }
+
+            when (destinations.loadState.refresh) {
+                is LoadState.NotLoading -> Unit
+                LoadState.Loading -> {
+                    item {
+                        LoadRefreshItem()
+                    }
+                }
+                is LoadState.Error -> {
+                    Log.e("HomeScreen", "Refresh: Error")
+                    item {
+                        Text("Failed to refresh destinations.")
+                    }
+                }
+            }
+
+
 
         }
     }
@@ -112,7 +152,8 @@ fun HomeScreen(
 @Composable
 fun TopBar(
     name: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 )
 {
     Row(
@@ -155,6 +196,9 @@ fun TopBar(
                 color = Color.White
             )
             .padding(10.dp)
+            .clickable {
+                navController.navigate(Screen.SearchScreen.route)
+            }
 
         ) {
             Icon(
