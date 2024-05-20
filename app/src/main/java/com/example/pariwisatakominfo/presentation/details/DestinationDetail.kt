@@ -254,6 +254,18 @@ fun Images(
     image:String
 )
 {
+    var showImage by remember {
+        mutableStateOf(false)
+    }
+    if (showImage){
+        ImagePreview (
+            onDismiss = {
+               showImage = false
+            }, image = image
+        )
+
+    }
+
         Row (
             modifier = Modifier
                 .fillMaxWidth()
@@ -263,6 +275,9 @@ fun Images(
                 modifier = Modifier
                     .height(120.dp)
                     .clip(RoundedCornerShape(8.dp))
+                    .clickable {
+                        showImage = true
+                    }
             ) {
                 val context = LocalContext.current
                 AsyncImage(
@@ -307,12 +322,14 @@ fun DetailLocation(
             .clickable {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$MAP_URL$lat,$long"))
                 intent.setPackage("com.google.android.apps.maps")
-                if (intent.resolveActivity(context.packageManager)!= null) {
+                if (intent.resolveActivity(context.packageManager) != null) {
                     context.startActivity(intent)
                 } else {
-                    Toast.makeText(context, "Google Maps App not found", Toast.LENGTH_SHORT).show()
+                    Toast
+                        .makeText(context, "Google Maps App not found", Toast.LENGTH_SHORT)
+                        .show()
                 }
-               val kor = "$MAP_URL$lat,$long"
+                val kor = "$MAP_URL$lat,$long"
                 Log.e("Coordinates Location", "data:$kor")
             },
         shape = RoundedCornerShape(8.dp),
