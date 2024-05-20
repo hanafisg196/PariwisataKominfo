@@ -1,5 +1,10 @@
 package com.example.pariwisatakominfo.presentation.details
 
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,9 +52,9 @@ import coil.request.ImageRequest
 import coil.size.Scale
 import com.example.pariwisatakominfo.R
 import com.example.pariwisatakominfo.common.Constant.ITEM_URL
+import com.example.pariwisatakominfo.common.Constant.MAP_URL
 import com.example.pariwisatakominfo.model.Destination
 import com.example.pariwisatakominfo.presentation.loading.LoadDetail
-import com.example.pariwisatakominfo.presentation.loading.LoadRefreshItem
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 import kotlinx.coroutines.delay
 
@@ -114,7 +119,11 @@ fun DestinationDetail(
                 )
             }
             item {
-                DetailLocation(location = destination.location)
+                DetailLocation(
+                    location = destination.location,
+                    lat =destination.latitude,
+                    long = destination.longitude,
+                )
             }
         }
     }
@@ -245,7 +254,6 @@ fun Images(
     image:String
 )
 {
-
         Row (
             modifier = Modifier
                 .fillMaxWidth()
@@ -253,7 +261,6 @@ fun Images(
         ) {
             Box(
                 modifier = Modifier
-//                    .padding(horizontal = 5.dp)
                     .height(120.dp)
                     .clip(RoundedCornerShape(8.dp))
             ) {
@@ -276,9 +283,16 @@ fun Images(
 
 
 
+@SuppressLint("QueryPermissionsNeeded")
 @Composable
-fun DetailLocation(location: String)
+fun DetailLocation(
+    location: String,
+    lat:Float,
+    long: Float,
+
+)
 {
+    val context = LocalContext.current
     Card(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -289,7 +303,18 @@ fun DetailLocation(location: String)
         modifier = Modifier
             .padding(start = 15.dp, top = 2.dp, end = 15.dp, bottom = 15.dp)
             .fillMaxWidth()
-            .height(80.dp),
+            .height(80.dp)
+            .clickable {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$MAP_URL$lat,$long"))
+                intent.setPackage("com.google.android.apps.maps")
+                if (intent.resolveActivity(context.packageManager)!= null) {
+                    context.startActivity(intent)
+                } else {
+                    Toast.makeText(context, "Google Maps App not found", Toast.LENGTH_SHORT).show()
+                }
+               val kor = "$MAP_URL$lat,$long"
+                Log.e("Coordinates Location", "data:$kor")
+            },
         shape = RoundedCornerShape(8.dp),
 
         ) {

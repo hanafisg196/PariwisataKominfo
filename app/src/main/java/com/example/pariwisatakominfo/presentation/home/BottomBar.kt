@@ -31,7 +31,7 @@ fun BottomBar(navController: NavHostController) {
             .offset(y = (-10).dp) // Adjust the vertical offset as needed
     ) {
         Surface(
-            modifier = Modifier.height(70.dp),
+            modifier = Modifier.height(65.dp),
             color = Color.Black,
             shape = RoundedCornerShape(30.dp) // Adjust the corner radius as needed
         ) {

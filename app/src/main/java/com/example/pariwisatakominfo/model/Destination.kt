@@ -11,6 +11,8 @@ data class Destination(
     val location: String,
     val title: String,
     val trip_id: Int,
+    val latitude: Float,
+    val longitude:Float,
     val updated_at: String,
     @SerializedName("images")
     val images: List<Image>
