@@ -26,7 +26,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.example.pariwisatakominfo.R
 import com.example.pariwisatakominfo.presentation.home.Destination
-import com.example.pariwisatakominfo.presentation.home.DestinationsViewModel
 import com.example.pariwisatakominfo.presentation.loading.LoadRefreshItem
 import com.example.pariwisatakominfo.presentation.loading.LoadingItem
 import com.example.pariwisatakominfo.ui.fonts.Fonts
@@ -87,11 +86,22 @@ fun DestinationsScreen(
             is LoadState.Error -> {
                 Log.e("HomeScreen", "Refresh: Error")
                 item {
-                    Text("Failed to refresh destinations.")
+                    Text(
+                        text = "Failed to refresh destinations.",
+                        overflow = TextOverflow.Ellipsis,
+                        fontFamily = Fonts.fontFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp,
+                        modifier = Modifier.
+                        padding(start = 20.dp, top = 5.dp)
+
+                    )
                 }
             }
         }
-
+        item {
+            Spacer(modifier = Modifier.height(70.dp))
+        }
     }
 }
 

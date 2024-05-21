@@ -48,6 +48,7 @@ fun TripsScreen(
         TopBarTrips()
         Spacer(modifier = Modifier.height(10.dp))
         Trips( navController = navController )
+        Spacer(modifier = Modifier.height(70.dp))
 
 }
 }
@@ -127,7 +128,14 @@ navController: NavHostController
 
             is LoadState.Error ->
                 item {
-                    // TODO
+                    Text(
+                        text = "Failed to refresh destinations.",
+                        overflow = TextOverflow.Ellipsis,
+                        fontFamily = Fonts.fontFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp,
+
+                    )
                 }
         }
     }

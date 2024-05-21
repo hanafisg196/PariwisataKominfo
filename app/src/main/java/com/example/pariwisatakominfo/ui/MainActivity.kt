@@ -23,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var navController: NavHostController
+
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +39,9 @@ class MainActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.background,
                         modifier = Modifier.fillMaxSize()
                     ) {
-                    navController = rememberNavController()
+                        val navController = rememberNavController()
                         MainScreen(navController = navController)
-
-                }
+                    }
             }
         }
     }
@@ -52,12 +51,13 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(navController: NavHostController) {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     val bottomBarScreens = listOf(
         Screen.HomeScreen.route,
         Screen.DestinationsScreen.route,
         Screen.Trips.route,
 
-    )
+        )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     Scaffold(
@@ -70,3 +70,5 @@ fun MainScreen(navController: NavHostController) {
         SetNavGraph(navController = navController)
     }
 }
+
+

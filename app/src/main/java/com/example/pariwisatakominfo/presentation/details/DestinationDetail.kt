@@ -1,10 +1,6 @@
 package com.example.pariwisatakominfo.presentation.details
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -34,12 +31,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,6 +56,8 @@ import com.example.pariwisatakominfo.common.Constant.ITEM_URL
 import com.example.pariwisatakominfo.common.Constant.MAP_URL
 import com.example.pariwisatakominfo.model.Destination
 import com.example.pariwisatakominfo.presentation.loading.LoadDetail
+import com.example.pariwisatakominfo.helper.openMapLocation
+import com.example.pariwisatakominfo.helper.parseHtml
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 import kotlinx.coroutines.delay
 
@@ -91,8 +94,9 @@ fun DestinationDetail(
             }
             item {
                 Spacer(modifier = Modifier.height(10.dp))
+                val content = parseHtml(destination.article)
                 ParagraphSection(
-                    article = destination.article
+                    article = content
                 )
             }
             item {
@@ -101,7 +105,7 @@ fun DestinationDetail(
                     overflow = TextOverflow.Ellipsis,
                     fontFamily = Fonts.fontFamily,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
+                    fontSize = 15.sp,
                     modifier = Modifier.padding(start = 15.dp, bottom = 10.dp)
                 )
             }
@@ -110,12 +114,20 @@ fun DestinationDetail(
             }
             item {
                 Text(
-                    text = destination.location,
+                    text = "Detail Location",
                     overflow = TextOverflow.Ellipsis,
                     fontFamily = Fonts.fontFamily,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(start = 15.dp, bottom = 15.dp)
+                    fontSize = 15.sp,
+                    modifier = Modifier.padding(start = 15.dp, bottom = 5.dp, top = 10.dp)
+                )
+                Text(
+                    text = "Click card untuk lihat lokasi di map",
+                    overflow = TextOverflow.Ellipsis,
+                    fontFamily = Fonts.fontFamily,
+                    fontWeight = FontWeight.Light,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 15.dp, bottom = 2.dp, top = 10.dp)
                 )
             }
             item {
@@ -195,20 +207,23 @@ fun DestinationHeader(
             fontFamily = Fonts.fontFamily,
             fontWeight = FontWeight.SemiBold,
             fontSize = 30.sp,
-            color = Color.LightGray,
+            color = Color.White,
+
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .padding(start = 25.dp, bottom = 60.dp)
+                .padding(start = 25.dp, bottom = 40.dp)
+                .shadow(10.dp, shape = RoundedCornerShape(10.dp))
         )
         Text(
             text = daerah,
             fontFamily = Fonts.fontFamily,
             fontWeight = FontWeight.Light,
             fontSize = 16.sp,
-            color = Color.LightGray,
+            color = Color.White,
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .padding(start = 30.dp, bottom = 40.dp)
+                .padding(start = 30.dp, bottom = 20.dp)
+                .shadow(10.dp, shape = RoundedCornerShape(10.dp))
         )
 
     }
@@ -269,7 +284,7 @@ fun Images(
         Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 5.dp, end = 5.dp)
+                .padding(start = 10.dp, end = 10.dp)
         ) {
             Box(
                 modifier = Modifier
@@ -295,9 +310,6 @@ fun Images(
     }
 
 
-
-
-
 @SuppressLint("QueryPermissionsNeeded")
 @Composable
 fun DetailLocation(
@@ -318,19 +330,12 @@ fun DetailLocation(
         modifier = Modifier
             .padding(start = 15.dp, top = 2.dp, end = 15.dp, bottom = 15.dp)
             .fillMaxWidth()
-            .height(80.dp)
+            .wrapContentHeight()
             .clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$MAP_URL$lat,$long"))
-                intent.setPackage("com.google.android.apps.maps")
-                if (intent.resolveActivity(context.packageManager) != null) {
-                    context.startActivity(intent)
-                } else {
-                    Toast
-                        .makeText(context, "Google Maps App not found", Toast.LENGTH_SHORT)
-                        .show()
-                }
-                val kor = "$MAP_URL$lat,$long"
-                Log.e("Coordinates Location", "data:$kor")
+               openMapLocation(
+                   context,
+                   url = "$MAP_URL$lat,$long"
+               )
             },
         shape = RoundedCornerShape(8.dp),
 
@@ -345,20 +350,22 @@ fun DetailLocation(
                 contentDescription = null,
                 modifier =
                 Modifier
-                    .size(40.dp)
+                    .size(30.dp)
             )
             Text(
                 text = location,
                 fontFamily = Fonts.fontFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = 20.sp,
+                fontSize = 15.sp,
                 color = Color.Gray,
-                modifier = Modifier.padding(start = 20.dp)
+                modifier = Modifier
+                    .padding(start = 20.dp)
             )
         }
 
     }
 }
+
 
 
 

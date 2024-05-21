@@ -56,7 +56,7 @@ fun SearchScreen(
             }
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+
         if (searchResult.itemCount == 0)
         {
             EmptyState()
@@ -111,7 +111,7 @@ fun EmptyState() {
             text = "No Result Found",
             fontFamily = Fonts.fontFamily,
             fontWeight = FontWeight.Thin,
-            fontSize = 12.sp,
+            fontSize = 20.sp,
             color = Color.Black,
 
         )

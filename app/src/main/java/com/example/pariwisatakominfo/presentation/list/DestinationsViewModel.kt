@@ -1,4 +1,4 @@
-package com.example.pariwisatakominfo.presentation.home
+package com.example.pariwisatakominfo.presentation.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -2,6 +2,7 @@ package com.example.pariwisatakominfo.data
 
 import com.example.pariwisatakominfo.data.dto.DestinationResponse
 import com.example.pariwisatakominfo.data.dto.DestinationsResponse
+import com.example.pariwisatakominfo.data.dto.RecomendeResponse
 import com.example.pariwisatakominfo.data.dto.SearchDestinationResponse
 import com.example.pariwisatakominfo.data.dto.TripDetailResponse
 import com.example.pariwisatakominfo.data.dto.TripResponse
@@ -51,7 +52,14 @@ suspend fun searchDestination(
     @Query("perPage") perPage: Int
     ) : TripsResponse
 
+    @GET("recommended")
+    suspend fun getRecomendDestination(
+    ) : RecomendeResponse
+
 }
+
+
+
 
 
 

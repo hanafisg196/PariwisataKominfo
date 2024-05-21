@@ -1,7 +1,7 @@
 package com.example.pariwisatakominfo.presentation.home
 
 import android.annotation.SuppressLint
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,9 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.pariwisatakominfo.R
@@ -50,36 +47,34 @@ import com.example.pariwisatakominfo.common.Constant.ITEM_URL
 import com.example.pariwisatakominfo.model.Destination
 import com.example.pariwisatakominfo.model.Trip
 import com.example.pariwisatakominfo.presentation.loading.LoadRefreshItem
-import com.example.pariwisatakominfo.presentation.loading.LoadingItem
 import com.example.pariwisatakominfo.presentation.navgraph.Screen
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 
 
 @Composable
 fun HomeScreen(
-    viewModel: DestinationsViewModel = hiltViewModel(),
+    viewModel: RecomendViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
-    val destinations = viewModel.destinationsPage.collectAsLazyPagingItems()
-    Box (
+    val state by viewModel.state.collectAsState()
+    val error by viewModel.error.collectAsState()
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = colorResource(id = R.color.white))
-    ){
+    ) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                
+            modifier = Modifier.fillMaxSize()
         ) {
-
             item {
                 Spacer(modifier = Modifier.height(35.dp))
-
             }
 
             item {
-                TopBar(name = " Sumbar Traveling", navController = navController)
+                TopBar(name = "Sumbar Traveling", navController = navController)
             }
+
             item {
                 Text(
                     text = "Top 5 Trip",
@@ -90,63 +85,46 @@ fun HomeScreen(
                     modifier = Modifier.padding(start = 20.dp, top = 20.dp)
                 )
             }
+
             item {
                 Trips(navController = navController)
+            }
+
+            if (error!=null) {
+                item {
+                    LoadRefreshItem()
+                }
+            } else if (state.isNotEmpty())  {
+                item {
+                    Text(
+                        text = "Recommend Destination",
+                        overflow = TextOverflow.Ellipsis,
+                        fontFamily = Fonts.fontFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(start = 19.dp)
+                    )
+                }
+
+                items(state.size) { index ->
+                    val recomDes = state[index]
+                    Destination(destination = recomDes, navController = navController)
+                }
+
+            }else {
+                item {
+                    LoadRefreshItem()
+                }
 
             }
+
             item {
-                Text(
-                    text = "Popular Destination",
-                    overflow = TextOverflow.Ellipsis,
-                    fontFamily = Fonts.fontFamily,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(start = 19.dp)
-                )
+                Spacer(modifier = Modifier.height(70.dp))
             }
-            items(destinations) {
-                item ->
-                item?.let {
-                    Destination(destination = it, navController = navController)
-                }
-
-            }
-            when (destinations.loadState.append) {
-                is LoadState.NotLoading -> Unit
-                LoadState.Loading -> {
-                    item {
-                        LoadingItem()
-                    }
-                }
-                is LoadState.Error -> {
-                    Log.e("HomeScreen", "Append: Error")
-                    item {
-                        Text("Failed to load more destinations.")
-                    }
-                }
-            }
-
-            when (destinations.loadState.refresh) {
-                is LoadState.NotLoading -> Unit
-                LoadState.Loading -> {
-                    item {
-                        LoadRefreshItem()
-                    }
-                }
-                is LoadState.Error -> {
-                    Log.e("HomeScreen", "Refresh: Error")
-                    item {
-                        Text("Failed to refresh destinations.")
-                    }
-                }
-            }
-
-
-
         }
     }
-
 }
+
 
 
 
@@ -154,7 +132,7 @@ fun HomeScreen(
 fun TopBar(
     name: String,
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
 )
 {
     Row(
@@ -170,17 +148,17 @@ fun TopBar(
             modifier = Modifier
                 .background(
                     shape = RoundedCornerShape(10.dp),
-                    color = Color.White
+                    color = Color.Transparent
                 )
                 .padding(10.dp)
 
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.toolbar),
-                contentDescription = "Back",
-                tint = Color.Black,
-                modifier = Modifier.size(25.dp)
-            )
+//            Icon(
+//                painter = painterResource(id = R.drawable.toolbar),
+//                contentDescription = "Back",
+//                tint = Color.Black,
+//                modifier = Modifier.size(25.dp)
+//            )
         }
         Text(
             text = name,
@@ -232,7 +210,7 @@ fun Trip(
             .width(220.dp)
             .height(250.dp)
             .clickable {
-               onclickItem(trip)
+                onclickItem(trip)
             },
         shape = RoundedCornerShape(8.dp),
 
@@ -302,15 +280,22 @@ fun Trips(
     navController: NavController
 )
 {
+    val context = LocalContext.current
     val state by viewModel.state.collectAsState()
+    val error by viewModel.error.collectAsState()
     LazyRow {
-        items(state.size) { index ->
-            val tripSlide = state[index]
-            Trip(trip = tripSlide){
-                navController.navigate(Screen.TripDetailScreen.route + "/${tripSlide.id}")
-                Log.d("Trip to destinaton","Item id: ${tripSlide.id}")
+        if (error !=null)
+        {
+            Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+        }else{
+            items(state.size) { index ->
+                val tripSlide = state[index]
+                Trip(trip = tripSlide){
+                    navController.navigate(Screen.TripDetailScreen.route + "/${tripSlide.id}")
+                }
             }
         }
+
     }
 }
 

@@ -77,7 +77,9 @@ dependencies {
     //Retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.12.0")
 
+    implementation ("com.google.accompanist:accompanist-permissions:0.24.9-beta")
     // Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
@@ -85,6 +87,8 @@ dependencies {
 
     // Paging 3.0
     implementation ("androidx.paging:paging-compose:1.0.0-alpha16")
+
+    implementation ("org.jsoup:jsoup:1.13.1")
 }
 kapt {
     correctErrorTypes = true

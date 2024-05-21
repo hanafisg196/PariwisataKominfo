@@ -11,5 +11,6 @@ sealed class Screen (val route : String){
     object DestinationsScreen : Screen(route = "destinations")
 
     object Trips : Screen(route = "trips")
+    object PermissionScreen :  Screen(route = "permission")
 
 }
