@@ -23,7 +23,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,15 +31,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,12 +50,10 @@ import coil.size.Scale
 import com.example.pariwisatakominfo.R
 import com.example.pariwisatakominfo.common.Constant.ITEM_URL
 import com.example.pariwisatakominfo.common.Constant.MAP_URL
-import com.example.pariwisatakominfo.model.Destination
-import com.example.pariwisatakominfo.presentation.loading.LoadDetail
 import com.example.pariwisatakominfo.helper.openMapLocation
 import com.example.pariwisatakominfo.helper.parseHtml
+import com.example.pariwisatakominfo.model.Destination
 import com.example.pariwisatakominfo.ui.fonts.Fonts
-import kotlinx.coroutines.delay
 
 
 @Composable
@@ -68,16 +62,6 @@ fun DestinationDetail(
     navController: NavController
 ) {
 
-    var isLoading by remember { mutableStateOf(true) }
-
-    LaunchedEffect(Unit) {
-
-        delay(1000)
-        isLoading = false
-    }
-    if (isLoading) {
-        LoadDetail()
-    } else {
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -139,7 +123,7 @@ fun DestinationDetail(
             }
         }
     }
-}
+
 
 
 

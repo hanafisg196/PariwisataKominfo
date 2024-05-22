@@ -27,14 +27,11 @@ class DestinationViewModel @Inject constructor(
 
      fun getDestination() {
          viewModelScope.launch {
-             try {
+
                  val response = repository.getDestination(destinationId)
                  _destination.value = response
 
-             } catch (e: Exception) {
-                 //Error
              }
          }
     }
 
-}

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.pariwisatakominfo.presentation.navgraph.BottomBarScreen
 import com.example.pariwisatakominfo.presentation.navgraph.Screen
 import com.example.pariwisatakominfo.presentation.navgraph.SetNavGraph
 import com.example.pariwisatakominfo.ui.theme.MyApplicationTheme
@@ -51,24 +52,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(navController: NavHostController) {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-    val bottomBarScreens = listOf(
-        Screen.HomeScreen.route,
-        Screen.DestinationsScreen.route,
-        Screen.Trips.route,
-
-        )
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-    Scaffold(
-        bottomBar = {
-            if (currentRoute in bottomBarScreens) {
-                BottomBar(navController = navController)
-            }
-        }
-    ) {
-        SetNavGraph(navController = navController)
-    }
+BottomBarScreen(navController = navController)
 }
 
 
