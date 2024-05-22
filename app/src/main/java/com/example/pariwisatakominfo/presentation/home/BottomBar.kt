@@ -1,6 +1,8 @@
 package com.example.pariwisatakominfo.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -13,6 +15,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -28,17 +31,18 @@ fun BottomBar(navController: NavHostController) {
     Box(
         modifier = Modifier
             .padding(horizontal = 20.dp)
-            .offset(y = (-10).dp) // Adjust the vertical offset as needed
+            .offset(y = (-50).dp)
     ) {
         Surface(
-            modifier = Modifier.height(65.dp),
+            modifier = Modifier.
+            height(80.dp),
             color = Color.Black,
-            shape = RoundedCornerShape(30.dp) // Adjust the corner radius as needed
+            shape = RoundedCornerShape(30.dp)
         ) {
             BottomAppBar(
                 containerColor = Color.Transparent,
                 contentColor = Color.White,
-                modifier = Modifier.height(70.dp)
+                modifier = Modifier.fillMaxWidth()
             ) {
                 IconButton(
                     onClick = {
@@ -48,7 +52,10 @@ fun BottomBar(navController: NavHostController) {
                             launchSingleTop = true
                         }
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .align(Alignment.CenterVertically)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.home),
@@ -66,7 +73,10 @@ fun BottomBar(navController: NavHostController) {
                             launchSingleTop = true
                         }
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .align(Alignment.CenterVertically)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.destination),
@@ -84,7 +94,10 @@ fun BottomBar(navController: NavHostController) {
                             launchSingleTop = true
                         }
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .align(Alignment.CenterVertically)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.trips),

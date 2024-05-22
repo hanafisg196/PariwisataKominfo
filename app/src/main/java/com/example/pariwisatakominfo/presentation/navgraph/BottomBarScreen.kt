@@ -23,6 +23,7 @@ fun BottomBarScreen(navController: NavHostController ) {
     Scaffold(
         bottomBar = {
             if (currentRoute in bottomBarScreens) {
+
                 BottomBar(navController = navController)
             }
         }
