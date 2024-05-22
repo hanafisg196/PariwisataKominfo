@@ -15,7 +15,8 @@ data class Destination(
     val longitude:Float,
     val updated_at: String,
     @SerializedName("images")
-    val images: List<Image>
+    val images: List<Image>,
+
 
 
 )

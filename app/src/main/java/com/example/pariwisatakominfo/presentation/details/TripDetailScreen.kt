@@ -1,6 +1,5 @@
 package com.example.pariwisatakominfo.presentation.details
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,21 +25,27 @@ import androidx.paging.compose.items
 import com.example.pariwisatakominfo.R
 import com.example.pariwisatakominfo.presentation.loading.LoadRefreshItem
 import com.example.pariwisatakominfo.presentation.loading.LoadingItem
+import com.example.pariwisatakominfo.presentation.loading.LoadingLinear
 import com.example.pariwisatakominfo.ui.fonts.Fonts
 
 
 @Composable
 fun TripDetailScreen(
     navController: NavController,
+    id: Int,
     viewModel: TripDetailViewModel = hiltViewModel(),
-    viewModelTrip: TripViewModel = hiltViewModel()
+    viewModelTrip: TripViewModel = hiltViewModel(),
+
 
 )
 {
 
     val destinations = viewModel.tripDetailPage.collectAsLazyPagingItems()
-    val  trip = viewModelTrip.trip.collectAsState()
 
+    val trip by viewModelTrip.trip.collectAsState()
+    LaunchedEffect(id) {
+       viewModelTrip.getTrip(id)
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -51,8 +58,12 @@ fun TripDetailScreen(
         }
         item{
             Spacer(modifier = Modifier.height(15.dp))
-            trip.value?.let { trip ->
-                TripSection(trip = trip)
+            if (trip != null) {
+                trip?.let { item ->
+                    TripSection(trip = item)
+                }
+            } else {
+                LoadingLinear()
             }
         }
         item{
@@ -72,35 +83,45 @@ fun TripDetailScreen(
                 DestinationSection(navController,it)
             }
         }
-        when (destinations.loadState.append) {
-            is LoadState.NotLoading -> {
-                Log.d("TripDetailScreen", "NotLoading State")
-            }
+        when(destinations.loadState.append)
+        {
+            is LoadState.NotLoading -> Unit
             LoadState.Loading -> {
-                Log.d("TripDetailScreen", "Loading State")
                 item {
                     LoadingItem()
                 }
             }
-            is LoadState.Error -> {
-                Log.d("TripDetailScreen", "Error State")
 
-            }
+            is LoadState.Error ->
+                item {
+                    // TODO
+                }
         }
 
-        when (destinations.loadState.refresh) {
+        when(destinations.loadState.refresh)
+        {
             is LoadState.NotLoading -> Unit
             LoadState.Loading -> {
-
                 item {
                     LoadRefreshItem()
+
                 }
             }
-            is LoadState.Error -> {
-                Log.d("TripDetailScreen", "Error State")
-                // Handle the error state appropriately
-            }
+
+            is LoadState.Error ->
+                item {
+                    Text(
+                        text = "Failed to refresh destinations.",
+                        overflow = TextOverflow.Ellipsis,
+                        fontFamily = Fonts.fontFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp,
+
+                        )
+                }
         }
+
+
 
     }
 

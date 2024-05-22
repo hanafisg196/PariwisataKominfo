@@ -2,13 +2,10 @@ package com.example.pariwisatakominfo.presentation.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pariwisatakominfo.common.Constant
 import com.example.pariwisatakominfo.model.Destination
-import com.example.pariwisatakominfo.model.Trip
 import com.example.pariwisatakominfo.repository.DestinationRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,16 +16,11 @@ class DestinationViewModel @Inject constructor(
 ):ViewModel() {
     private val _destination = MutableStateFlow<Destination?>(null)
     val destination: MutableStateFlow<Destination?> = _destination
-    var destinationId: Int = Constant.ID
 
-    init {
-        getDestination()
-    }
-
-     fun getDestination() {
+     fun getDestination(id: Int) {
          viewModelScope.launch {
 
-                 val response = repository.getDestination(destinationId)
+                 val response = repository.getDestination(id)
                  _destination.value = response
 
              }

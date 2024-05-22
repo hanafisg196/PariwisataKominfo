@@ -1,9 +1,7 @@
 package com.example.pariwisatakominfo.presentation.details
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pariwisatakominfo.common.Constant.ID
 import com.example.pariwisatakominfo.model.Trip
 import com.example.pariwisatakominfo.repository.TripRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,21 +17,13 @@ class TripViewModel @Inject constructor(
 ) : ViewModel() {
     private val _trip = MutableStateFlow<Trip?>(null)
     val trip: StateFlow<Trip?> = _trip
-    var tripId: Int = ID
 
-    init {
-        getTrip()
-    }
 
-    fun getTrip() {
+    fun getTrip(id:Int) {
         viewModelScope.launch {
-            try {
-                val response = repository.getTrip(tripId)
+                val response = repository.getTrip(id)
                 _trip.value = response
 
-            } catch (e: Exception) {
-              //Error
-            }
         }
     }
 }

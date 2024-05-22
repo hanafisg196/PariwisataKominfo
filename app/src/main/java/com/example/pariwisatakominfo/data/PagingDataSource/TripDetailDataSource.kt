@@ -23,7 +23,6 @@ class TripDetailDataSource(
 
             val page = params.key?: 1
             val response = repository.getTripDetail(id,page, Constant.ITEM_PAGE)
-            Log.d("TripDetailDataSource", "Data: ${response.data}")
 
             LoadResult.Page(
                 data = response.data,

@@ -41,15 +41,8 @@ fun SetNavGraph(
             route = Screen.DestinationDetail.route+ "/{id}"
         ){
             navBackStackEntry ->
-            val viewModelDestination: DestinationViewModel = hiltViewModel()
             val id = navBackStackEntry.arguments?.getString("id")?.toIntOrNull()?: -1
-            LaunchedEffect(id) {
-                viewModelDestination.destinationId = id
-                viewModelDestination.getDestination()
-            }
-
-
-            DestinationDetailScreen(navController = navController)
+            DestinationDetailScreen(navController = navController,id)
         }
         composable(
             route = Screen.TripDetailScreen.route + "/{id}"
@@ -57,16 +50,8 @@ fun SetNavGraph(
             navBackStackEntry ->
             val id = navBackStackEntry.arguments?.getString("id")?.toIntOrNull()?: -1
             val viewModel: TripDetailViewModel = hiltViewModel()
-            val viewModelTrip: TripViewModel = hiltViewModel()
-
             viewModel.destinationId = id
-
-            LaunchedEffect(id) {
-                viewModelTrip.tripId = id
-                viewModelTrip.getTrip()
-            }
-
-            TripDetailScreen(navController = navController)
+            TripDetailScreen(navController = navController,id)
         }
         composable(
             route = Screen.SearchScreen.route
